@@ -1,0 +1,5 @@
+import type { InferSelectModel } from "drizzle-orm";
+import type { favorites } from "@/pkg/db/schema";
+
+// Derived from the Drizzle schema so the type can never drift from the table.
+export type Favorite = InferSelectModel<typeof favorites>;
