@@ -1,3 +1,3 @@
-export { useFavorites } from "./favorites.query";
-export { useFavoriteToggle } from "./favorites.mutation";
-export { listFavorites, addFavorite, removeFavorite } from "./favorites.api";
+export { addFavorite, listFavorites, removeFavorite } from './favorites.api'
+export { toggleFavorite, useFavoriteToggle } from './favorites.mutation'
+export { FAVORITES_KEY, favoritesQueryOptions, useFavorites } from './favorites.query'

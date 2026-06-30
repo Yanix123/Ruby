@@ -1,20 +1,23 @@
-import { eq } from "drizzle-orm";
-import { db } from "@/pkg/db";
-import { favorites, items } from "@/pkg/db/schema";
-import { FavoritesList } from "@/widgets/favorites-list";
+import { type FC } from 'react'
 
-export async function FavoritesModule({ userId }: { userId: string }) {
-  // Scoped to the current user (DoD #5) — read fresh from the DB (DoD #4).
-  const rows = await db
-    .select({ item: items })
-    .from(favorites)
-    .innerJoin(items, eq(favorites.itemId, items.id))
-    .where(eq(favorites.userId, userId));
+import { FavoritesList } from '@/widgets/favorites-list'
 
+import { getFavoriteMovies } from './favorites.service'
+
+// interface
+interface IProps {}
+
+// component — Server Component: SSR favorites via the /api/favorites/movies endpoint.
+const FavoritesModule: FC<Readonly<IProps>> = async () => {
+  const movies = await getFavoriteMovies()
+
+  // render
   return (
-    <section className="flex flex-col gap-6">
-      <h1 className="text-2xl font-semibold tracking-tight">Your favorites</h1>
-      <FavoritesList movies={rows.map((r) => r.item)} />
+    <section className='flex flex-col gap-6'>
+      <h1 className='text-2xl font-semibold tracking-tight'>Your favorites</h1>
+      <FavoritesList movies={movies} />
     </section>
-  );
+  )
 }
+
+export { FavoritesModule }

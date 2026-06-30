@@ -1,1 +1,1 @@
-export { SiteHeader } from "./site-header.component";
+export { SiteHeader } from './site-header.component'

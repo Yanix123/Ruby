@@ -1,27 +1,19 @@
-import "server-only";
+import { envClient } from '@/config/env'
+import type { IMovie } from '@/entities/models'
 
-import { cache } from "react";
-import { desc, eq } from "drizzle-orm";
-import { db } from "@/pkg/db";
-import { items } from "@/pkg/db/schema";
-import { isUuid } from "../uuid";
-import type { Movie } from "@/entities/models";
+// Absolute base so the fetchers work both in the browser and in Server Components.
+const base = envClient.NEXT_PUBLIC_APP_URL ?? ''
 
-export async function listMovies(): Promise<Movie[]> {
-  return db.select().from(items).orderBy(desc(items.createdAt));
+// GET /api/movies
+export const listMovies = async (): Promise<IMovie[]> => {
+  const res = await fetch(`${base}/api/movies`, { cache: 'no-store' })
+  if (!res.ok) return []
+  return res.json()
 }
 
-// Wrapped in React `cache` so the page module and generateMetadata share one
-// query per request instead of hitting the DB twice.
-export const getMovieById = cache(
-  async (id: string): Promise<Movie | null> => {
-    // Guard malformed ids before the uuid column query (else Postgres throws).
-    if (!isUuid(id)) return null;
-    const [movie] = await db
-      .select()
-      .from(items)
-      .where(eq(items.id, id))
-      .limit(1);
-    return movie ?? null;
-  },
-);
+// GET /api/movies/:id
+export const getMovieById = async (id: string): Promise<IMovie | null> => {
+  const res = await fetch(`${base}/api/movies/${id}`, { cache: 'no-store' })
+  if (!res.ok) return null
+  return res.json()
+}

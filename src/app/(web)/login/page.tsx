@@ -1,9 +1,14 @@
-import { AuthLogin } from "@/features/auth-login";
+import { type NextPage } from 'next'
 
-export default function LoginPage() {
-  return (
-    <div className="flex justify-center py-8">
-      <AuthLogin />
-    </div>
-  );
+import { AuthLoginModule } from '@/modules/auth-login'
+
+// interface
+interface IProps {}
+
+// component
+const LoginPage: NextPage<Readonly<IProps>> = () => {
+  // render
+  return <AuthLoginModule />
 }
+
+export default LoginPage

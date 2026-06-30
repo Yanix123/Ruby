@@ -1,10 +1,19 @@
-import { redirect } from "next/navigation";
-import { getSession } from "@/pkg/auth/auth";
-import { FavoritesModule } from "@/modules/favorites";
+import { type NextPage } from 'next'
+import { redirect } from 'next/navigation'
 
-export default async function FavoritesPage() {
-  // Authoritative server-side guard (proxy.ts is only an optimistic first layer).
-  const session = await getSession();
-  if (!session) redirect("/login");
-  return <FavoritesModule userId={session.user.id} />;
+import { FavoritesModule } from '@/modules/favorites'
+import { getSession } from '@/shared/auth/auth.server'
+
+// interface
+interface IProps {}
+
+// component
+const FavoritesPage: NextPage<Readonly<IProps>> = async () => {
+  const session = await getSession()
+  if (!session) redirect('/login')
+
+  // render
+  return <FavoritesModule />
 }
+
+export default FavoritesPage

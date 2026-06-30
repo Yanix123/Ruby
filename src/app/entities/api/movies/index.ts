@@ -1,1 +1,1 @@
-export { listMovies, getMovieById } from "./movies.api";
+export { getMovieById, listMovies } from './movies.api'

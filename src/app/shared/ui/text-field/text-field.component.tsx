@@ -1,39 +1,46 @@
-import { forwardRef } from "react";
+import { forwardRef, type InputHTMLAttributes } from 'react'
 
-type TextFieldProps = React.InputHTMLAttributes<HTMLInputElement> & {
-  label: string;
-  error?: string;
-};
+import { cn } from '@/pkg/theme/lib/utils'
+import { Label } from '@/pkg/theme/ui/label'
 
-// Accessible input: associated <label>, aria-invalid, and aria-describedby → error.
-// forwardRef so it composes with react-hook-form's `register`.
-export const TextField = forwardRef<HTMLInputElement, TextFieldProps>(
-  function TextField({ label, error, id, name, className, ...props }, ref) {
-    const inputId = id ?? name;
-    const errorId = error ? `${inputId}-error` : undefined;
-    return (
-      <div className="flex flex-col gap-1">
-        <label htmlFor={inputId} className="text-sm font-medium">
-          {label}
-        </label>
-        <input
-          id={inputId}
-          name={name}
-          ref={ref}
-          aria-invalid={error ? true : undefined}
-          aria-describedby={errorId}
-          className={
-            className ??
-            "w-full rounded-lg border border-black/[.12] bg-transparent px-3 py-2 text-sm outline-none focus:border-foreground dark:border-white/[.2]"
-          }
-          {...props}
-        />
-        {error && (
-          <p id={errorId} role="alert" className="text-sm text-red-600">
-            {error}
-          </p>
+// interface
+interface IProps extends InputHTMLAttributes<HTMLInputElement> {
+  label: string
+  error?: string
+}
+
+// component
+const TextField = forwardRef<HTMLInputElement, Readonly<IProps>>(function TextField(props, ref) {
+  const { label, error, id, name, className, ...rest } = props
+  const inputId = id ?? name
+  const errorId = error ? `${inputId}-error` : undefined
+
+  // render
+  return (
+    <div className='flex flex-col gap-1'>
+      <Label htmlFor={inputId} className={cn({ 'text-destructive': error })}>
+        {label}
+      </Label>
+      <input
+        id={inputId}
+        name={name}
+        ref={ref}
+        aria-invalid={error ? true : undefined}
+        aria-describedby={errorId}
+        className={cn(
+          'border-input focus-visible:border-ring focus-visible:ring-ring/50 w-full rounded-lg border bg-transparent px-3 py-2 text-sm shadow-xs transition-[color,box-shadow] outline-none focus-visible:ring-[3px]',
+          { 'border-destructive': error },
+          className,
         )}
-      </div>
-    );
-  },
-);
+        {...rest}
+      />
+      {error && (
+        <p id={errorId} role='alert' className='text-destructive text-sm'>
+          {error}
+        </p>
+      )}
+    </div>
+  )
+})
+
+export { TextField }

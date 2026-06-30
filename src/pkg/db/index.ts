@@ -1,2 +1,1 @@
-export { db } from "./db.client";
-export * from "./schema";
+export { db } from './db.client'

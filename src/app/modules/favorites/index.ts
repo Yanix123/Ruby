@@ -1,1 +1,1 @@
-export { FavoritesModule } from "./favorites.module";
+export { FavoritesModule } from './favorites.module'

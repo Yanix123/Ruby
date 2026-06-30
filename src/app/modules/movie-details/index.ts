@@ -1,1 +1,1 @@
-export { MovieDetailsModule } from "./movie-details.module";
+export { MovieDetailsModule } from './movie-details.module'

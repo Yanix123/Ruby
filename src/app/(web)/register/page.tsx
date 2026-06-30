@@ -1,9 +1,14 @@
-import { AuthRegister } from "@/features/auth-register";
+import { type NextPage } from 'next'
 
-export default function RegisterPage() {
-  return (
-    <div className="flex justify-center py-8">
-      <AuthRegister />
-    </div>
-  );
+import { AuthRegisterModule } from '@/modules/auth-register'
+
+// interface
+interface IProps {}
+
+// component
+const RegisterPage: NextPage<Readonly<IProps>> = () => {
+  // render
+  return <AuthRegisterModule />
 }
+
+export default RegisterPage

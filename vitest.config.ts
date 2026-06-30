@@ -15,10 +15,17 @@ export default defineConfig({
       "@/config": r("./src/config"),
       "@/pkg": r("./src/pkg"),
       "@": r("./src"),
+      "server-only": r("./tests/stubs/server-only.ts"),
     },
   },
   test: {
     environment: "node",
-    include: ["tests/unit/**/*.test.ts"],
+    // Dummy env so importing env-validated modules (db/auth) doesn't throw in unit tests.
+    env: {
+      DATABASE_URL: "postgresql://user:pass@localhost:5432/db",
+      BETTER_AUTH_SECRET: "0123456789abcdef0123456789abcdef",
+      BETTER_AUTH_URL: "http://localhost:3000",
+    },
+    include: ["tests/unit/**/*.spec.ts"],
   },
 });

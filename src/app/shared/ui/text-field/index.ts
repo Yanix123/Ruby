@@ -1,1 +1,1 @@
-export { TextField } from "./text-field.component";
+export { TextField } from './text-field.component'

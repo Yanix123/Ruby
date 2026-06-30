@@ -5,7 +5,7 @@ import { defineConfig } from "drizzle-kit";
 config({ path: ".env.local" });
 
 export default defineConfig({
-  schema: "./src/pkg/db/schema.ts",
+  schema: "./src/pkg/db/schema.table.ts",
   out: "./drizzle",
   dialect: "postgresql",
   // Use the session-mode pooler (DIRECT_URL) for migrations; fall back to the runtime pooler.

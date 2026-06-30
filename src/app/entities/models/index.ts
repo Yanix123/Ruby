@@ -1,2 +1,3 @@
-export type { Movie } from "./movie.model";
-export type { Favorite } from "./favorite.model";
+export type { ISignInValues, ISignUpValues } from './auth.model'
+export type { IFavorite } from './favorite.model'
+export type { IMovie } from './movie.model'

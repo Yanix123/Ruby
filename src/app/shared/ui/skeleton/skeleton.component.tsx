@@ -1,8 +1,18 @@
-export function Skeleton({ className = "" }: { className?: string }) {
-  return (
-    <div
-      className={`animate-pulse rounded-md bg-black/[.08] dark:bg-white/[.1] ${className}`}
-      aria-hidden="true"
-    />
-  );
+import { type FC } from 'react'
+
+import { cn } from '@/pkg/theme/lib/utils'
+
+// interface
+interface IProps {
+  className?: string
 }
+
+// component
+const Skeleton: FC<Readonly<IProps>> = (props) => {
+  const { className } = props
+
+  // render
+  return <div aria-hidden='true' className={cn('bg-accent animate-pulse rounded-md', className)} />
+}
+
+export { Skeleton }

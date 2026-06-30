@@ -1,1 +1,1 @@
-export { AuthRegister } from "./auth-register.component";
+export { AuthRegister } from './auth-register.component'

@@ -17,8 +17,8 @@
 /blob-report
 /playwright/.cache
 
-# internal build-helper docs — not published
-/.claude
+# Claude project config is committed (skills/wiki/agents); only local overrides are ignored
+/.claude/settings.local.json
 
 # next.js
 /.next/

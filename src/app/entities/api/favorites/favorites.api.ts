@@ -1,46 +1,26 @@
-"use server";
+import { envClient } from '@/config/env'
+import type { IFavorite } from '@/entities/models'
 
-import { and, eq } from "drizzle-orm";
-import { headers } from "next/headers";
-import { db } from "@/pkg/db";
-import { favorites } from "@/pkg/db/schema";
-import { auth } from "@/pkg/auth/auth";
-import { isUuid } from "../uuid";
-import type { Favorite } from "@/entities/models";
+const base = envClient.NEXT_PUBLIC_APP_URL ?? ''
 
-// userId is ALWAYS derived from the server session — never trusted from the client (DoD #5).
-async function requireUser(): Promise<string> {
-  const session = await auth.api.getSession({ headers: await headers() });
-  if (!session) throw new Error("Unauthorized");
-  return session.user.id;
+// GET /api/favorites — current user's favorites (browser sends the session cookie).
+export const listFavorites = async (): Promise<IFavorite[]> => {
+  const res = await fetch(`${base}/api/favorites`, { credentials: 'include', cache: 'no-store' })
+  if (!res.ok) return []
+  return res.json()
 }
 
-// Defense-in-depth: reject malformed ids before they reach the uuid column.
-function assertItemId(itemId: string): void {
-  if (!isUuid(itemId)) throw new Error("Invalid item id");
+// POST /api/favorites
+export const addFavorite = async (itemId: string): Promise<void> => {
+  await fetch(`${base}/api/favorites`, {
+    method: 'POST',
+    credentials: 'include',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ itemId }),
+  })
 }
 
-export async function listFavorites(): Promise<Favorite[]> {
-  // Public read: a logged-out visitor simply has no favorites (the movie
-  // details page is public). Writes below still require a session.
-  const session = await auth.api.getSession({ headers: await headers() });
-  if (!session) return [];
-  return db
-    .select()
-    .from(favorites)
-    .where(eq(favorites.userId, session.user.id));
-}
-
-export async function addFavorite(itemId: string): Promise<void> {
-  assertItemId(itemId);
-  const userId = await requireUser();
-  await db.insert(favorites).values({ userId, itemId }).onConflictDoNothing();
-}
-
-export async function removeFavorite(itemId: string): Promise<void> {
-  assertItemId(itemId);
-  const userId = await requireUser();
-  await db
-    .delete(favorites)
-    .where(and(eq(favorites.userId, userId), eq(favorites.itemId, itemId)));
+// DELETE /api/favorites/:itemId
+export const removeFavorite = async (itemId: string): Promise<void> => {
+  await fetch(`${base}/api/favorites/${itemId}`, { method: 'DELETE', credentials: 'include' })
 }

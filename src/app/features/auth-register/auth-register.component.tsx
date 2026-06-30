@@ -1,21 +1,28 @@
-"use client";
+'use client'
 
-import Link from "next/link";
-import { useForm } from "react-hook-form";
-import { useRouter } from "next/navigation";
-import { signUp } from "@/pkg/auth/auth-client";
-import { TextField } from "@/shared/ui/text-field";
+import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+import { type FC } from 'react'
+import { useForm } from 'react-hook-form'
 
-type Values = { name: string; email: string; password: string };
+import type { ISignUpValues } from '@/entities/models'
+import { Button } from '@/pkg/theme/ui/button'
+import { signUp } from '@/shared/auth'
+import { TextField } from '@/shared/ui/text-field'
 
-export function AuthRegister() {
-  const router = useRouter();
+// interface
+interface IProps {}
+
+// component
+const AuthRegister: FC<Readonly<IProps>> = () => {
+  const router = useRouter()
+
   const {
     register,
     handleSubmit,
     setError,
     formState: { errors, isSubmitting },
-  } = useForm<Values>();
+  } = useForm<ISignUpValues>()
 
   const onSubmit = handleSubmit(async (v) => {
     try {
@@ -23,73 +30,73 @@ export function AuthRegister() {
         name: v.name,
         email: v.email,
         password: v.password,
-      });
+      })
       if (error) {
-        setError("root", { message: error.message ?? "Registration failed" });
-        return;
+        setError('root', { message: error.message ?? 'Registration failed' })
+        return
       }
-      router.push("/movies");
-      router.refresh();
+      router.push('/movies')
+      router.refresh()
     } catch {
-      setError("root", { message: "Something went wrong. Please try again." });
+      setError('root', { message: 'Something went wrong. Please try again.' })
     }
-  });
+  })
 
+  // render
   return (
-    <form onSubmit={onSubmit} className="flex w-full max-w-sm flex-col gap-4">
-      <h1 className="text-2xl font-semibold tracking-tight">Create account</h1>
+    <form onSubmit={onSubmit} className='flex w-full max-w-sm flex-col gap-4'>
+      <h1 className='text-2xl font-semibold tracking-tight'>Create account</h1>
 
       <TextField
-        label="Name"
-        autoComplete="name"
+        label='Name'
+        autoComplete='name'
         error={errors.name?.message}
-        {...register("name", { required: "Name is required" })}
+        {...register('name', { required: 'Name is required' })}
       />
 
       <TextField
-        label="Email"
-        type="email"
-        autoComplete="email"
+        label='Email'
+        type='email'
+        autoComplete='email'
         error={errors.email?.message}
-        {...register("email", {
-          required: "Email is required",
+        {...register('email', {
+          required: 'Email is required',
           pattern: {
             value: /^[^@\s]+@[^@\s]+\.[^@\s]+$/,
-            message: "Invalid email",
+            message: 'Invalid email',
           },
         })}
       />
 
       <TextField
-        label="Password"
-        type="password"
-        autoComplete="new-password"
+        label='Password'
+        type='password'
+        autoComplete='new-password'
         error={errors.password?.message}
-        {...register("password", {
-          required: "Password is required",
-          minLength: { value: 8, message: "Min 8 characters" },
+        {...register('password', {
+          required: 'Password is required',
+          minLength: { value: 8, message: 'Min 8 characters' },
         })}
       />
 
       {errors.root && (
-        <p role="alert" className="text-sm text-red-600">
+        <p role='alert' className='text-sm text-red-600'>
           {errors.root.message}
         </p>
       )}
 
-      <button
-        disabled={isSubmitting}
-        className="rounded-full bg-foreground px-4 py-2 text-sm font-medium text-background transition-opacity hover:opacity-90 disabled:opacity-50"
-      >
-        {isSubmitting ? "Creating…" : "Create account"}
-      </button>
+      <Button type='submit' disabled={isSubmitting}>
+        {isSubmitting ? 'Creating…' : 'Create account'}
+      </Button>
 
-      <p className="text-sm text-zinc-600 dark:text-zinc-400">
-        Already have an account?{" "}
-        <Link href="/login" className="underline">
+      <p className='text-sm text-zinc-600 dark:text-zinc-400'>
+        Already have an account?{' '}
+        <Link href='/login' className='underline'>
           Sign in
         </Link>
       </p>
     </form>
-  );
+  )
 }
+
+export { AuthRegister }

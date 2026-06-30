@@ -1,1 +1,1 @@
-export { geistSans, geistMono } from "./font";
+export { geistMono, geistSans } from './font'
